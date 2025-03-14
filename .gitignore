@@ -1,0 +1,15 @@
+# Virtual environment directory
+venv/
+
+# Environment variables file (contains sensitive info)
+.env
+
+# Python bytecode and cache
+__pycache__/
+*.pyc
+
+# VSCode settings folder (if you want to ignore local settings)
+.vscode/
+
+# Log files
+*.log

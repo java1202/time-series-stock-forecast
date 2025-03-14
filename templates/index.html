@@ -1,0 +1,44 @@
+<!-- templates/index.html -->
+<!doctype html>
+<html>
+<head>
+    <title>Stock Forecasting System</title>
+</head>
+<body>
+    <h1>Stock Time-Series Management & Forecasting</h1>
+    
+    <!-- Form to fetch and store stock data -->
+    <h2>Fetch Stock Data</h2>
+    <form method="post" action="/fetch">
+        <label for="symbol">Stock Symbol:</label>
+        <input type="text" id="symbol" name="symbol" placeholder="e.g., AAPL" required>
+        <button type="submit">Fetch &amp; Store Data</button>
+    </form>
+    
+    <!-- Form to view historical data -->
+    <h2>View Historical Data</h2>
+    <form method="get" action="/history">
+        <label for="symbol_history">Stock Symbol:</label>
+        <input type="text" id="symbol_history" name="symbol" placeholder="e.g., AAPL" required>
+        <button type="submit">View History</button>
+    </form>
+    
+    <!-- Form to forecast future prices -->
+    <h2>Forecast Future Prices</h2>
+    <form method="get" action="/forecast">
+        <label for="symbol_forecast">Stock Symbol:</label>
+        <input type="text" id="symbol_forecast" name="symbol" placeholder="e.g., AAPL" required>
+        <label for="steps">Forecast Steps:</label>
+        <input type="number" id="steps" name="steps" value="10">
+        <button type="submit">Forecast</button>
+    </form>
+    
+    <!-- Form to visualize historical data -->
+    <h2>Visualize Historical Data</h2>
+    <form method="get" action="/visualize">
+        <label for="symbol_visualize">Stock Symbol:</label>
+        <input type="text" id="symbol_visualize" name="symbol" placeholder="e.g., AAPL" required>
+        <button type="submit">Visualize</button>
+    </form>
+</body>
+</html>

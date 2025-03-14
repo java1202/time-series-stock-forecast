@@ -1,0 +1,8 @@
+Flask
+pandas
+requests
+statsmodels
+influxdb-client
+plotly
+pytest
+python-dotenv
