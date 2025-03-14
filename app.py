@@ -42,30 +42,39 @@ def history():
     symbol = request.args.get('symbol')
     if not symbol:
         return jsonify({"status": "error", "message": "No stock symbol provided"}), 400
+    
     try:
         df = query_stock_data(symbol)
-        data = df.to_dict(orient='records')
+        # Reset the index so that the timestamp becomes a column
+        df_reset = df.reset_index()  
+        data = df_reset.to_dict(orient='records')
         return jsonify({"status": "success", "data": data})
     except Exception as e:
         logger.exception(f"Error in /history endpoint for symbol {symbol}: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
+
+# In app.py (forecast endpoint)
 @app.route('/forecast', methods=['GET'])
 def forecast():
     symbol = request.args.get('symbol')
     steps = int(request.args.get('steps', 10))
     if not symbol:
         return jsonify({"status": "error", "message": "No stock symbol provided"}), 400
+    
     try:
         df = query_stock_data(symbol)
         if 'close' not in df.columns:
             return jsonify({"status": "error", "message": "Historical data not found or missing 'close' field."}), 500
+        
         forecast_values = forecast_stock_prices(df, steps=steps)
-        forecast_dict = forecast_values.to_dict()
+        # Convert datetime keys to strings for JSON serialization
+        forecast_dict = {str(k): v for k, v in forecast_values.to_dict().items()}
         return jsonify({"status": "success", "forecast": forecast_dict})
     except Exception as e:
         logger.exception(f"Error in /forecast endpoint for symbol {symbol}: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
+
 
 @app.route('/visualize', methods=['GET'])
 def visualize():

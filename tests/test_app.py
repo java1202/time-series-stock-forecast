@@ -1,5 +1,10 @@
-# tests/test_app.py
+import sys
+import os
 import pytest
+
+# Add the project root to sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from app import app
 
 @pytest.fixture
@@ -13,5 +18,3 @@ def test_index(client):
     response = client.get('/')
     assert response.status_code == 200
     assert b"Stock Time-Series Management & Forecasting" in response.data
-
-# Additional tests for /fetch, /history, /forecast, and /visualize can be added here.

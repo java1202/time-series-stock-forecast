@@ -1,4 +1,5 @@
 # database.py
+import pandas as pd
 from influxdb_client import InfluxDBClient, Point, WriteOptions
 from config import INFLUXDB_URL, INFLUXDB_TOKEN, INFLUXDB_ORG, INFLUXDB_BUCKET
 import logging
@@ -47,16 +48,26 @@ def query_stock_data(symbol, start="-30d"):
           |> sort(columns: ["_time"])
         '''
         result = query_api.query_data_frame(query)
+        
         if isinstance(result, list):
             df = result[0]
             for table in result[1:]:
                 df = df.append(table)
         else:
             df = result
+        
+        # Remove extra columns that InfluxDB might include
         for col in ["_result", "_start", "_stop"]:
             if col in df.columns:
                 df.drop(columns=[col], inplace=True)
-        logger.info(f"Successfully queried data for {symbol} from InfluxDB")
+        
+        # Convert the '_time' column to datetime using the known format
+        if '_time' in df.columns:
+            df['_time'] = pd.to_datetime(df['_time'], format="%a, %d %b %Y %H:%M:%S GMT", errors='coerce')
+            df.set_index('_time', inplace=True)
+        else:
+            df.index = pd.to_datetime(df.index, errors='coerce')
+        
         return df
     except Exception as e:
         logger.exception(f"Failed to query data for {symbol} from InfluxDB: {e}")
